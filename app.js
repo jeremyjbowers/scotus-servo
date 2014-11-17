@@ -30,8 +30,9 @@ function commitAll (etagsArray) {
 
 function getOpinions (array) {
   _.each(argv._, function (year, index, years) {
+    var url = "http://www.supremecourt.gov/opinions/" + year;
     setTimeout(function () {
-      request({headers: {"User-Agent":'scotus_servo (https://github.com/jeremyjbowers/scotus-servo)'},url:"http://www.supremecourt.gov/opinions/" + year}, function (error, response, body) {
+      request({headers: {"User-Agent":'scotus_servo (https://github.com/jeremyjbowers/scotus-servo)'}, url: url}, function (error, response, body) {
           console.log(url);
           if (!error && response.statusCode == 200) {
             var $ = cheerio.load(body); // Get the slip opinions.
