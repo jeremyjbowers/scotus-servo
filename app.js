@@ -13,14 +13,7 @@ var fs = require('fs');
 var path = require('path');
 var git = require('git-utils');
 var child_process = require('child_process');
-var Twit = require('twit');
-
-// var T = new Twit({
-//     consumer_key: process.env.CONSUMER_KEY
-//   , consumer_secret: process.env.CONSUMER_SECRET
-//   , access_token: process.env.ACCESS_TOKEN
-//   , access_token_secret: process.env.ACCESS_TOKEN_SECRET
-// })
+var https = require('https')
 
 start()
 
@@ -39,6 +32,7 @@ function getOpinions (array) {
   _.each(argv._, function (year, index, years) {
     setTimeout(function () {
       request({headers: {"User-Agent":'scotus_servo (https://github.com/jeremyjbowers/scotus-servo)'},url:"http://www.supremecourt.gov/opinions/" + year}, function (error, response, body) {
+          console.log(url);
           if (!error && response.statusCode == 200) {
             var $ = cheerio.load(body); // Get the slip opinions.
             getTags(year, array, $, function() {
@@ -131,22 +125,22 @@ function slack (link, name, status, op, callback) {
       if (!match) {
         console.log(slackText)
         var post_data = querystring.stringify({"text": slackText});
-        var post_options = {
-          host: 'https://hooks.slack.com/',
-          port: '80',
-          path: process.env.SCOTUSBOT_SLACK_PATH,
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Content-Length': post_data.length
-          }
-        };
-        var post_req = http.request(post_options, function(res) {
-          res.setEncoding('utf8');
-          res.on('data', function (chunk) {
-            console.log('Response: ' + chunk);
-          });
-        });
+var post_options = {
+  host: 'hooks.slack.com',
+  port: '80',
+  path: process.env.SCOTUSBOT_SLACK_PATH,
+  method: 'POST',
+  headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': post_data.length
+  }
+};
+var post_req = https.request(post_options, function(res) {
+  res.setEncoding('utf8');
+  res.on('data', function (chunk) {
+    console.log('Response: ' + chunk);
+  });
+});
 
         post_req.write(post_data);
         post_req.end();
