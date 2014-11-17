@@ -15,12 +15,12 @@ var git = require('git-utils');
 var child_process = require('child_process');
 var Twit = require('twit');
 
-var T = new Twit({
-    consumer_key: process.env.CONSUMER_KEY
-  , consumer_secret: process.env.CONSUMER_SECRET
-  , access_token: process.env.ACCESS_TOKEN
-  , access_token_secret: process.env.ACCESS_TOKEN_SECRET
-})
+// var T = new Twit({
+//     consumer_key: process.env.CONSUMER_KEY
+//   , consumer_secret: process.env.CONSUMER_SECRET
+//   , access_token: process.env.ACCESS_TOKEN
+//   , access_token_secret: process.env.ACCESS_TOKEN_SECRET
+// })
 
 start()
 
@@ -120,7 +120,7 @@ function tweet (link, name, status, op, callback) {
 	}
 	var newOp = "SCOTUS has ruled in " + op + " " + link + " (Backup: http://code.esq.io/scotus-servo/" + name + ")";
 	child_process.exec('git log -n 1 --pretty=format:%H -- ' + name, function (err, stdout, stderr) {
-		var oldLink = "https://raw.githubusercontent.com/vzvenyach/scotus-servo/" +stdout + "/" + name;
+		var oldLink = "https://raw.githubusercontent.com/jeremyjbowers/scotus-servo/" +stdout + "/" + name;
 		var changedOp = "POSSIBLE CHANGE ALERT in " + op + " (before " + oldLink + " & after http://code.esq.io/scotus-servo/" + name + ")";
 		var tweetText = (status == 128 ? newOp : changedOp)
 
@@ -129,9 +129,9 @@ function tweet (link, name, status, op, callback) {
 		compareHashes(name, stdout + " " + name, function (match) {
 			if (!match) {
 				console.log(tweetText)
-				T.post('statuses/update', { status: tweetText }, function(err, data, response) {
-		  			console.log(data)
-				})
+				// T.post('statuses/update', { status: tweetText }, function(err, data, response) {
+		  // 			console.log(data)
+				// })
 			}
 			else if (match) {
 				console.log("This is a false positive! Very naughty Supreme Court: " + name)
