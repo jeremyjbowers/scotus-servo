@@ -37,7 +37,8 @@ function getOpinions (array) {
           if (!error && response.statusCode == 200) {
             var $ = cheerio.load(body); // Get the slip opinions.
             getTags(year, array, $, function() {
-              commitAll(array)
+              commitAll(array);
+              console.log(array);
             })
           }
           else {
