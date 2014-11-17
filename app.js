@@ -20,7 +20,7 @@ start()
 function start (callback) {
   var f = JSON.parse(fs.readFileSync("etags.json", encoding="utf-8"))
   var etagsArray = f.map(function (tag, i, etags) {return tag.split(":")[0]})
-  getOpinions(etagsArray)
+  getOpinions(etagsArray);
 }
 
 function commitAll (etagsArray) {
